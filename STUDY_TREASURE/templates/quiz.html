@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="{{ url_for('static', filename='offline_sync.js') }}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Treasure - ML Adaptive STEM Workbench</title>
+    <style>
+        body { 
+            background: #0f172a; 
+            color: #fff; 
+            font-family: 'Times New Roman', Times, serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+        .quiz-container { 
+            background: #1e293b; 
+            border: 1px solid #334155; 
+            border-radius: 16px; 
+            padding: 30px; 
+            max-width: 650px; 
+            width: 90%; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+        }
+        .quiz-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; /* Thodi aur space badha di gayi hai */
+            border-bottom: 1px solid #334155; 
+            padding-bottom: 15px; 
+        }
+        .badge-level { 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+        }
+        .level-easy { background: #10b981; color: #fff; }
+        .level-medium { background: #f59e0b; color: #000; }
+        .level-hard { background: #ef4444; color: #fff; }
+        .stats-box { font-size: 16px; color: #facc15; font-weight: bold; }
+        .question-text { font-size: 19px; margin-bottom: 20px; line-height: 1.5; color: #f8fafc; }
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .option-btn { 
+            background: #334155; 
+            border: 1px solid #475569; 
+            color: #fff; 
+            padding: 14px 18px; 
+            border-radius: 8px; 
+            text-align: left; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-family: inherit; 
+            transition: background 0.2s; 
+        }
+        .option-btn:hover { background: #475569; border-color: #60a5fa; }
+        .option-btn.correct { background: #10b981 !important; border-color: #059669; }
+        .option-btn.wrong { background: #ef4444 !important; border-color: #dc2626; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 99; 
+        }
+        .modal-content { 
+            background: #1e293b; 
+            border: 2px solid #facc15; 
+            padding: 35px; 
+            border-radius: 16px; 
+            text-align: center; 
+            max-width: 420px; 
+            width: 90%; 
+        }
+        .btn { 
+            background: #3b82f6; 
+            color: #fff; 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 16px; 
+            font-family: inherit;
+            text-decoration: none; 
+            display: inline-block; 
+            margin-top: 15px; 
+        }
+        .btn:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <!-- Single Clean Header -->
+        <div class="quiz-header">
+            <div>
+                <span id="slotProgress" style="color: #94a3b8; font-size: 14px; margin-right: 10px;">Q 1/5</span>
+                <span id="levelBadge" class="badge-level level-medium">Level: Medium</span>
+            </div>
+            <div class="stats-box">👤 {{ session.get('student_name', 'Student') }} | 🪙 Coins: <span id="coinCount">{{ session.get('student_coins', 0) }}</span> | ⭐ Streak: <span id="streakCount">0</span></div>
+        </div>
+
+        <div id="questionBox">
+            <h3 id="questionTitle" class="question-text">Initializing ML Adaptive Slot...</h3>
+            <div id="optionsBox" class="options-list"></div>
+        </div>
+    </div>
+
+    <!-- Reward Modal -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 5-Question Slot Completed!</h2>
+            <p style="font-size: 32px; margin: 15px 0;">⭐⭐⭐</p>
+            <p id="finalScoreText" style="color: #cbd5e1; font-size: 17px; margin-bottom: 20px;"></p>
+            <a href="{{ url_for('subjects') }}" class="btn">Back to Subjects 🚀</a>
+        </div>
+    </div>
+
+    <script>
+        let startTime = Date.now();
+
+        async function fetchQuestion() {
+            startTime = Date.now(); 
+            try {
+                const response = await fetch('/api/get_question');
+                const data = await response.json();
+
+                if (data.status === 'completed') {
+                    showRewardModal(data.total_coins);
+                    return;
+                }
+
+                document.getElementById("slotProgress").innerText = `Q ${data.question_number}/${data.total_slot_questions}`;
+                document.getElementById("questionTitle").innerText = `${data.question_number}. ${data.question_text}`;
+                
+                let badge = document.getElementById("levelBadge");
+                badge.innerText = `Level: ${data.difficulty.toUpperCase()}`;
+                badge.className = `badge-level level-${data.difficulty.toLowerCase()}`;
+
+                document.getElementById("coinCount").innerText = data.coins;
+                document.getElementById("streakCount").innerText = data.streak;
+
+                let optBox = document.getElementById("optionsBox");
+                optBox.innerHTML = "";
+
+                data.options.forEach((opt, index) => {
+                    if (opt && opt.trim() !== "") {
+                        let btn = document.createElement("button");
+                        btn.className = "option-btn";
+                        btn.innerText = opt;
+                        btn.onclick = () => submitAnswer(index);
+                        optBox.appendChild(btn);
+                    }
+                });
+            } catch (err) {
+                console.error("Error fetching question:", err);
+            }
+        }
+
+        async function submitAnswer(selectedIndex) {
+            const timeSpentSec = (Date.now() - startTime) / 1000.0;
+            let buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(b => b.disabled = true); 
+
+            try {
+                const response = await fetch('/api/submit_answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        selected: selectedIndex,
+                        time_spent_sec: timeSpentSec
+                    })
+                });
+
+                const resData = await response.json();
+
+                if (resData.error) {
+                    alert(resData.error);
+                    return;
+                }
+
+                buttons.forEach((btn, idx) => {
+                    if (idx === resData.correct_answer) {
+                        btn.classList.add("correct");
+                    } else if (idx === selectedIndex && !resData.is_correct) {
+                        btn.classList.add("wrong");
+                    }
+                });
+
+                document.getElementById("coinCount").innerText = resData.coins;
+                document.getElementById("streakCount").innerText = resData.streak;
+
+                setTimeout(() => {
+                    fetchQuestion();
+                }, 1500);
+            } catch (err) {
+                console.error("Error submitting answer:", err);
+            }
+        }
+
+        function showRewardModal(totalCoins) {
+            document.getElementById("finalScoreText").innerText = `You earned ${totalCoins} Coins in this adaptive slot and updated your mastery profile!`;
+            document.getElementById("rewardModal").style.display = "flex";
+        }
+
+        // Initialize the first question slot on page load
+        window.onload = fetchQuestion;
+    </script>
+</body>
+</html>

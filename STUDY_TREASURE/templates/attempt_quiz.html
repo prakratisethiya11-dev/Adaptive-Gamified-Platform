@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Treasure - Adaptive Quiz Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .quiz-hub-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+        .hub-banner h2 {
+            font-family: 'Merriweather', serif;
+            font-size: 30px;
+            color: #f472b6;
+            margin-bottom: 10px;
+        }
+        .hub-banner p {
+            color: #cbd5e1;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+        .class-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .chapter-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 25px;
+            text-decoration: none;
+            color: inherit;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            border-color: #f472b6;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(244, 114, 182, 0.3);
+        }
+        .chapter-card h3 {
+            font-family: 'Merriweather', serif;
+            font-size: 18px;
+            color: #fde047;
+            margin-bottom: 10px;
+        }
+        .chapter-card p {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .start-tag {
+            align-self: flex-start;
+            background: #3b82f6;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .chapter-card:hover .start-tag {
+            background: #ec4899;
+        }
+        .no-quiz-msg {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            padding: 20px;
+            border-radius: 12px;
+            color: #fca5a5;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        .back-btn {
+            display: inline-block;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .hidden-section { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-hub-container">
+        <div class="hub-banner">
+            <h2>Adaptive Quiz Challenge Arena</h2>
+            <p>Test your knowledge! Difficulty levels adapt dynamically based on your accuracy & streak.</p>
+        </div>
+
+        <div class="class-badge" id="studentClassBadge">Loading Class...</div>
+
+        <!-- Quiz Sections -->
+        <div class="chapter-grid">
+            
+            <!-- Class 11 Physics Quizzes (Only visible for Class 11) -->
+            <div class="quiz-group class-11-box hidden-section">
+                <a href="{{ url_for('quiz_page', chapter='units_measurement') }}" class="chapter-card">
+                    <div>
+                        <h3>Units & Measurements</h3>
+                        <p>Physics Chapter 1 - Master dimensions, significant figures, and error analysis.</p>
+                    </div>
+                    <span class="start-tag">Start Quiz</span>
+                </a>
+            </div>
+            <div class="quiz-group class-11-box hidden-section">
+                <a href="{{ url_for('quiz_page', chapter='motion_straight_line') }}" class="chapter-card">
+                    <div>
+                        <h3>Motion in a Straight Line</h3>
+                        <p>Physics Chapter 2 - Explore velocity, acceleration-time graphs, and kinematic equations.</p>
+                    </div>
+                    <span class="start-tag">Start Quiz</span>
+                </a>
+            </div>
+
+            <!-- Class 12 Chemistry Quizzes (Only visible for Class 12) -->
+            <div class="quiz-group class-12-box hidden-section">
+                <a href="{{ url_for('quiz_page', chapter='solutions') }}" class="chapter-card">
+                    <div>
+                        <h3>Solutions</h3>
+                        <p>Chemistry Chapter 1 - Concentration terms, Raoult's Law & colligative properties.</p>
+                    </div>
+                    <span class="start-tag">Start Quiz</span>
+                </a>
+            </div>
+            <div class="quiz-group class-12-box hidden-section">
+                <a href="{{ url_for('quiz_page', chapter='electrochemistry') }}" class="chapter-card">
+                    <div>
+                        <h3>Electrochemistry</h3>
+                        <p>Chemistry Chapter 2 - Electrochemical cells, Nernst equation, and Kohlrausch's law.</p>
+                    </div>
+                    <span class="start-tag">Start Quiz</span>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Fallback message if class doesn't match -->
+        <div id="noQuizAlert" class="no-quiz-msg hidden-section">
+            No Quiz and Games uploaded for your registered class level.
+        </div>
+
+        <div>
+            <a href="{{ url_for('subjects') }}" class="back-btn">&larr; Back to Subjects Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        const studentClass = "{{ student_class }}".toLowerCase();
+        const badge = document.getElementById("studentClassBadge");
+        
+        const class11Boxes = document.querySelectorAll(".class-11-box");
+        const class12Boxes = document.querySelectorAll(".class-12-box");
+        const alertBox = document.getElementById("noQuizAlert");
+
+        if (studentClass.includes("11")) {
+            badge.innerText = "Registered Class: 11th (Physics Hub)";
+            class11Boxes.forEach(box => box.classList.remove("hidden-section"));
+        } else if (studentClass.includes("12")) {
+            badge.innerText = "Registered Class: 12th (Chemistry Hub)";
+            class12Boxes.forEach(box => box.classList.remove("hidden-section"));
+        } else {
+            badge.innerText = `Registered Class: ${studentClass.toUpperCase() || 'General'}`;
+            alertBox.classList.remove("hidden-section");
+        }
+    </script>
+</body>
+</html>

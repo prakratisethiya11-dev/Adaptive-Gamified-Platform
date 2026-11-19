@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Treasure - Class 8 Physics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container" style="text-align: center; padding: 50px;">
+        <h2>Class 8 Science & Physics Hub</h2>
+        <p style="margin: 20px 0; color: #02162d;">Master electrical components, circuits, and energy flows safely!</p>
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('circuit_builder') }}" class="btn btn-gold" style="padding: 15px 30px; font-size: 18px; text-decoration: none; border-radius: 10px; background: #f59e0b; color: #000; font-weight: bold; display: inline-block;">
+                Play Circuit Builder Workbench 🔌
+            </a>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="padding: 10px 20px; background: rgba(255,255,255,0.15); color: white; text-decoration: none; border-radius: 8px;">Back to Subjects</a>
+        </div>
+    </div>
+</body>
+</html>

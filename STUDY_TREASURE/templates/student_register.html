@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration - Study Treasure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+</head>
+<body>
+
+    <div class="register-box">
+        <h2>Student Registration</h2>
+        <p>Create your student account</p>
+
+        <form method="POST" action="/register">
+            <label>Full Name</label>
+            <input type="text" name="full_name" placeholder="Enter your full name (letters only)" pattern="[A-Za-z\s]+" title="Name should contain only alphabets and spaces" required>
+
+            <label>Student ID / Roll Number</label>
+            <input type="text" name="roll_number" placeholder="Enter your roll number" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter valid email (e.g., student@gmail.com)" required>
+
+            <label>Class</label>
+            <select name="student_class" required>
+                <option value="">Select your class</option>
+                <option value="6th">6th</option>
+                <option value="7th">7th</option>
+                <option value="8th">8th</option>
+                <option value="9th">9th</option>
+                <option value="10th">10th</option>
+                <option value="11th">11th</option>
+                <option value="12th">12th</option>
+            </select>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password (min 6 chars)" minlength="6" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm your password" minlength="6" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+    </div>
+
+</body>
+</html>

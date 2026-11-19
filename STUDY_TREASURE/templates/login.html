@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Treasure - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Study Treasure</h1>
+        <p class="subtitle">Welcome Back! Please Login</p>
+
+        <!-- Added method="POST" and action -->
+        <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+
+            <label for="role">Login As</label>
+            <select id="role" name="role" required>
+                <option value="">Select Category</option>
+                <option value="student">Student</option>
+                <option value="faculty">Faculty</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email"
+                   placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"
+                   placeholder="Enter your password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="register-text">
+            Not registered yet?
+            <a href="#" id="registerLink">Register Here</a>
+        </p>
+    </div>
+
+    <!-- Phone-style Top-Center Toast Notification Container -->
+    <div id="toastNotification" class="toast-notification">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Toast Notification CSS Styling (Top-Center) -->
+    <style>
+        .toast-notification {
+            position: fixed;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #ffffff;
+            color: #1e293b;
+            padding: 16px 28px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 16px;
+            font-weight: 500;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            border-bottom: 4px solid #4f46e5;
+            white-space: nowrap;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+
+    <script>
+        const role = document.getElementById("role");
+
+        const registerPages = {
+            student: "{{ url_for('register') }}",
+            faculty: "{{ url_for('faculty_register') }}",
+            admin: "admin_register.html"
+        };
+
+        document.getElementById("registerLink").onclick = function(event) {
+            event.preventDefault();
+
+            if (role.value === "") {
+                alert("Please select your category first.");
+                return;
+            }
+
+            window.location.href = registerPages[role.value];
+        };
+    </script>
+
+    <!-- Script to Trigger Notification and Handle Auto-Redirect -->
+    {% if alert_message %}
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const toast = document.getElementById('toastNotification');
+            const msgElem = document.getElementById('toastMessage');
+            
+            msgElem.innerText = "{{ alert_message|safe }}";
+            
+            // Show notification in top-center
+            toast.classList.add('show');
+
+            let redirectUrl = "{{ redirect_url|safe }}";
+
+            // Hide and redirect after 2 seconds automatically
+            setTimeout(function() {
+                toast.classList.remove('show');
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            }, 2000); 
+        });
+    </script>
+    {% endif %}
+
+</body>
+</html>

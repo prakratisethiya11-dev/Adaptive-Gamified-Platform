@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    // Flask session se logged-in student ki ID yahan set hogi
+        window.currentStudentId = "{{ session['student_id'] }}";
+    </script>
+    <script src="{{ url_for('static', filename='offline_sync.js') }}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Treasure - Circuit Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='circuit_builder.css') }}">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="logo-area">
+            <span class="badge">ST</span>
+            <h1>Master Electrician Workbench</h1>
+        </div>
+        <div class="user-stats">
+            <span id="coinsDisplay">🪙 {{ student_coins }}</span>
+            <span id="streakDisplay">🔥 Streak: {{ student_streak }} Days</span>
+            <span style="color: #facc15; font-weight: bold; margin-left: 10px;">👤 {{ student_name }}</span>
+            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="margin-left: 15px;">Back to Subjects</a>
+        </div>
+    </header>
+
+    <main class="circuit-container">
+        <div class="circuit-banner">
+            <h2>⚡ Complete the Electric Circuit</h2>
+            <p>Connect all essential electrical components (Cell, Switch, Bulb, Wires & Resistor) to make the bulb glow brightly!</p>
+        </div>
+
+        <div class="workbench-grid">
+            <!-- Component Toolbar -->
+            <div class="components-panel">
+                <h3>Electrical Components</h3>
+                <div class="comp-list">
+                    <div class="comp-item" draggable="true" onclick="addComponent('Battery')">🔋 Battery Cell (+/-)</div>
+                    <div class="comp-item" draggable="true" onclick="addComponent('Switch')">🎚️ Plug Key (Switch)</div>
+                    <div class="comp-item" draggable="true" onclick="addComponent('Bulb')">💡 Electric Bulb</div>
+                    <div class="comp-item" draggable="true" onclick="addComponent('Resistor')">⚡ Resistor</div>
+                    <div class="comp-item" draggable="true" onclick="addComponent('Wire')">〰️ Copper Wires</div>
+                </div>
+            </div>
+
+            <!-- Breadboard / Circuit Canvas -->
+            <div class="canvas-panel">
+                <h3>Circuit Board</h3>
+                <div id="circuitBoard" class="circuit-board">
+                    <p class="board-placeholder">Click components from left panel to assemble your circuit sequence here!</p>
+                </div>
+                <div class="board-actions">
+                    <button class="btn btn-warning" onclick="resetBoard()">Clear Board 🔄</button>
+                    <button class="btn btn-success" onclick="testCircuit()">Test Circuit ⚡</button>
+                </div>
+            </div>
+
+            <!-- Status & Results Panel -->
+            <div class="status-panel">
+                <h3>Circuit Status</h3>
+                <div class="bulb-display-box">
+                    <div id="bulbVisual" class="bulb-off">💡</div>
+                    <span id="statusText">Circuit Incomplete</span>
+                </div>
+                <div id="missionDesc" class="mission-desc">
+                    Required: <b>Battery + Switch + Bulb + Wires</b> in proper order with Switch CLOSED.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Reward Modal -->
+    <div id="rewardModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎉 Brilliant Engineer!</h2>
+            <div class="stars-row">⭐⭐⭐</div>
+            <p>You successfully built a closed circuit and made the bulb glow!</p>
+            <!-- Updated button to trigger streak and points update -->
+            <button class="btn btn-primary" onclick="completeCurrentGame(20)">Next Challenge 🚀</button>
+        </div>
+    </div>
+
+    <script>
+    function completeCurrentGame(earnedCoins = 20) {
+        fetch('/api/complete_game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ coins: earnedCoins })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log("Game completed successfully! New Streak:", data.streak);
+                window.location.href = "{{ url_for('subjects') }}";
+            }
+        })
+        .catch(error => console.error('Error completing game:', error));
+    }    
+    </script>
+
+    <script src="{{ url_for('static', filename='circuit_builder.js') }}"></script>
+</body>
+</html>

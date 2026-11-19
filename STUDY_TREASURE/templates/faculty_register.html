@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faculty Registration - Study Treasure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <style>
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 10px 0 20px 0;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: #333;
+            cursor: pointer;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-box">
+        <h2>Faculty Registration</h2>
+        <p>Create your faculty account</p>
+
+        <form action="{{ url_for('faculty_register') }}" method="POST">
+            <label>Full Name</label>
+            <input type="text" name="full_name" placeholder="Enter your full name (letters only)" pattern="[A-Za-z\s]+" title="Name should contain only alphabets and spaces" required>
+
+            <label>Faculty ID</label>
+            <input type="text" name="faculty_id" placeholder="Enter your faculty ID" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter valid email (e.g., faculty@gmail.com)" required>
+
+            <label>Department</label>
+            <select name="department" required>
+                <option value="">Select department</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label>Classes Taught</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 6"> Class 6
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 7"> Class 7
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 8"> Class 8
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 9"> Class 9
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 10"> Class 10
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 11"> Class 11
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="classes_taught" value="Class 12"> Class 12
+                </label>
+            </div>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password (min 6 chars)" minlength="6" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm your password" minlength="6" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+    </div>
+
+</body>
+</html>
