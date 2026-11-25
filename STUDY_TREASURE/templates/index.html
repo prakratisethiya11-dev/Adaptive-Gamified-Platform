@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure</title>
+    <title data-i18n="title_index">Study Treasure</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -18,8 +18,8 @@
 
         <div class="header-actions">
             <!-- Custom Language Dropdown Button -->
-            <div class="dropdown">
-                <button class="btn btn-outline dropdown-btn">Select Language ▾</button>
+            <div class="dropdown" data-lang-switcher>
+                <button class="btn btn-outline dropdown-btn" data-i18n="lang_select">Select Language ▾</button>
                 <div class="dropdown-content">
                     <a href="#" onclick="changeLanguage('en'); return false;">English</a>
                     <a href="#" onclick="changeLanguage('hi'); return false;">हिन्दी (Hindi)</a>
@@ -28,14 +28,14 @@
                 </div>
             </div>
 
-            <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline" data-i18n="btn_login">Login</a>
             
             <div class="dropdown">
-                <button class="btn btn-primary dropdown-btn">Register ▾</button>
+                <button class="btn btn-primary dropdown-btn" data-i18n="btn_register_menu">Register ▾</button>
                 <div class="dropdown-content">
-                    <a href="{{ url_for('register') }}">Student</a>
-                    <a href="{{ url_for('faculty_register') }}">Faculty</a>
-                    <a href="admin_register.html">Admin</a>
+                    <a href="{{ url_for('register') }}" data-i18n="role_student">Student</a>
+                    <a href="{{ url_for('faculty_register') }}" data-i18n="role_faculty">Faculty</a>
+                    <a href="{{ url_for('admin_register') }}" data-i18n="role_admin">Admin</a>
                 </div>
             </div> 
         </div>
@@ -102,24 +102,8 @@
         <p>© 2026 Study Treasure</p>
     </footer>
 
-    <!-- Translation Switcher Script -->
+    <!-- Language engine: translations + shared i18n.js (same on every page) -->
     <script src="{{ url_for('static', filename='translations.js') }}"></script>
-    <script>
-        function changeLanguage(lang) {
-            localStorage.setItem('selected_lang', lang);
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    element.innerText = translations[lang][key];
-                }
-            });
-        }
-
-        // Page load hone par user ki saved language automatically apply karna
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('selected_lang') || 'en';
-            changeLanguage(savedLang);
-        });
-    </script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

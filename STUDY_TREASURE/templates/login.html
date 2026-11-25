@@ -3,40 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - Login</title>
+    <title data-i18n="title_login">Study Treasure - Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
 
     <div class="login-container">
         <h1>Study Treasure</h1>
-        <p class="subtitle">Welcome Back! Please Login</p>
+        <p class="subtitle" data-i18n="login_welcome">Welcome Back! Please Login</p>
 
         <!-- Added method="POST" and action -->
         <form id="loginForm" method="POST" action="{{ url_for('login') }}">
 
-            <label for="role">Login As</label>
+            <label for="role" data-i18n="login_as">Login As</label>
             <select id="role" name="role" required>
-                <option value="">Select Category</option>
-                <option value="student">Student</option>
-                <option value="faculty">Faculty</option>
-                <option value="admin">Admin</option>
+                <option value="" data-i18n="opt_select_category">Select Category</option>
+                <option value="student" data-i18n="role_student">Student</option>
+                <option value="faculty" data-i18n="role_faculty">Faculty</option>
+                <option value="admin" data-i18n="role_admin">Admin</option>
             </select>
 
-            <label for="email">Email Address</label>
+            <label for="email" data-i18n="lbl_email_address">Email Address</label>
             <input type="email" id="email" name="email"
-                   placeholder="Enter your email" required>
+                   placeholder="Enter your email" data-i18n-placeholder="ph_email" required>
 
-            <label for="password">Password</label>
+            <label for="password" data-i18n="lbl_password">Password</label>
             <input type="password" id="password" name="password"
-                   placeholder="Enter your password" required>
+                   placeholder="Enter your password" data-i18n-placeholder="ph_password" required>
 
-            <button type="submit">Login</button>
+            <button type="submit" data-i18n="btn_login">Login</button>
         </form>
 
         <p class="register-text">
-            Not registered yet?
-            <a href="#" id="registerLink">Register Here</a>
+            <span data-i18n="not_registered">Not registered yet?</span>
+            <a href="#" id="registerLink" data-i18n="register_here">Register Here</a>
         </p>
     </div>
 
@@ -64,7 +64,9 @@
             opacity: 0;
             transition: opacity 0.4s ease, transform 0.4s ease;
             border-bottom: 4px solid #4f46e5;
-            white-space: nowrap;
+            white-space: normal;
+            text-align: center;
+            max-width: 90vw;
         }
 
         .toast-notification.show {
@@ -73,20 +75,22 @@
         }
     </style>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
     <script>
         const role = document.getElementById("role");
 
         const registerPages = {
             student: "{{ url_for('register') }}",
             faculty: "{{ url_for('faculty_register') }}",
-            admin: "admin_register.html"
+            admin: "{{ url_for('admin_register') }}"
         };
 
         document.getElementById("registerLink").onclick = function(event) {
             event.preventDefault();
 
             if (role.value === "") {
-                alert("Please select your category first.");
+                alert(t("alert_select_category"));
                 return;
             }
 
@@ -100,13 +104,14 @@
         window.addEventListener('DOMContentLoaded', function() {
             const toast = document.getElementById('toastNotification');
             const msgElem = document.getElementById('toastMessage');
-            
-            msgElem.innerText = "{{ alert_message|safe }}";
-            
+            const serverMessage = {{ alert_message|tojson }};
+            const redirectUrl = {{ (redirect_url or '')|tojson }};
+
+            // Known server messages follow the selected language; others (e.g. database errors) are shown as they are
+            msgElem.innerText = i18n.tServer(serverMessage);
+
             // Show notification in top-center
             toast.classList.add('show');
-
-            let redirectUrl = "{{ redirect_url|safe }}";
 
             // Hide and redirect after 2 seconds automatically
             setTimeout(function() {
@@ -114,7 +119,7 @@
                 if (redirectUrl) {
                     window.location.href = redirectUrl;
                 }
-            }, 2000); 
+            }, 2000);
         });
     </script>
     {% endif %}

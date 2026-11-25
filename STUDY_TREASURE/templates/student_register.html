@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student Registration - Study Treasure</title>
+    <title data-i18n="title_student_reg">Student Registration - Study Treasure</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
 </head>
 <body>
 
     <div class="register-box">
-        <h2>Student Registration</h2>
-        <p>Create your student account</p>
+        <h2 data-i18n="sr_heading">Student Registration</h2>
+        <p data-i18n="sr_sub">Create your student account</p>
 
         <form method="POST" action="/register">
-            <label>Full Name</label>
-            <input type="text" name="full_name" placeholder="Enter your full name (letters only)" pattern="[A-Za-z\s]+" title="Name should contain only alphabets and spaces" required>
+            <label data-i18n="lbl_full_name">Full Name</label>
+            <input type="text" name="full_name" placeholder="Enter your full name (letters only)" data-i18n-placeholder="ph_full_name" pattern="[A-Za-z\s]+" title="Name should contain only alphabets and spaces" data-i18n-title="title_name_pattern" required>
 
-            <label>Student ID / Roll Number</label>
-            <input type="text" name="roll_number" placeholder="Enter your roll number" required>
+            <label data-i18n="lbl_roll">Student ID / Roll Number</label>
+            <input type="text" name="roll_number" placeholder="Enter your roll number" data-i18n-placeholder="ph_roll" required>
 
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Enter valid email (e.g., student@gmail.com)" required>
+            <label data-i18n="lbl_email">Email</label>
+            <input type="email" name="email" placeholder="Enter valid email (e.g., student@gmail.com)" data-i18n-placeholder="ph_email_student" required>
 
-            <label>Class</label>
+            <label data-i18n="lbl_class">Class</label>
             <select name="student_class" required>
-                <option value="">Select your class</option>
-                <option value="6th">6th</option>
-                <option value="7th">7th</option>
-                <option value="8th">8th</option>
-                <option value="9th">9th</option>
-                <option value="10th">10th</option>
-                <option value="11th">11th</option>
-                <option value="12th">12th</option>
+                <option value="" data-i18n="opt_select_class">Select your class</option>
+                <option value="6th" data-i18n="cls_6">6th</option>
+                <option value="7th" data-i18n="cls_7">7th</option>
+                <option value="8th" data-i18n="cls_8">8th</option>
+                <option value="9th" data-i18n="cls_9">9th</option>
+                <option value="10th" data-i18n="cls_10">10th</option>
+                <option value="11th" data-i18n="cls_11">11th</option>
+                <option value="12th" data-i18n="cls_12">12th</option>
             </select>
 
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Create a password (min 6 chars)" minlength="6" required>
+            <label data-i18n="lbl_password">Password</label>
+            <input type="password" name="password" placeholder="Create a password (min 6 chars)" data-i18n-placeholder="ph_create_password" minlength="6" required>
 
-            <label>Confirm Password</label>
-            <input type="password" name="confirm_password" placeholder="Confirm your password" minlength="6" required>
+            <label data-i18n="lbl_confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm your password" data-i18n-placeholder="ph_confirm_password" minlength="6" required>
 
-            <button type="submit">Register</button>
+            <button type="submit" data-i18n="btn_register">Register</button>
         </form>
 
-        <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+        <p><a href="{{ url_for('home') }}" data-i18n="back_home">Back to Home</a></p>
     </div>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

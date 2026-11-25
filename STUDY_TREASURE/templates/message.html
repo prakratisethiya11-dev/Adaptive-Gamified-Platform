@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="title_index">Study Treasure</title>
+    <style>
+        body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+               background: #f8fafc; font-family: Georgia, 'Times New Roman', serif; color: #1e293b; }
+        .message-box { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 30px 36px;
+                       max-width: 520px; width: 88%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .message-box p { font-size: 18px; line-height: 1.5; margin: 0 0 20px 0; }
+        .message-box .detail { display: block; margin-top: 8px; font-size: 14px; color: #64748b; word-break: break-word; }
+        .message-box a { display: inline-block; background: #0284c7; color: #fff; text-decoration: none;
+                         padding: 10px 20px; border-radius: 6px; }
+        .message-box a:hover { background: #0369a1; }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+        <p>
+            <span data-i18n="{{ key }}">{{ default }}</span>
+            {% if detail %}<span class="detail">{{ detail }}</span>{% endif %}
+        </p>
+        <a href="{{ back_url }}" data-i18n="{{ back_key }}">{{ back_default }}</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
+</body>
+</html>
