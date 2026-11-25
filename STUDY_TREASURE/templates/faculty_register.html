@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Faculty Registration - Study Treasure</title>
+    <title data-i18n="title_faculty_reg">Faculty Registration - Study Treasure</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
     <style>
         .checkbox-group {
@@ -33,65 +33,67 @@
 <body>
 
     <div class="register-box">
-        <h2>Faculty Registration</h2>
-        <p>Create your faculty account</p>
+        <h2 data-i18n="fr_heading">Faculty Registration</h2>
+        <p data-i18n="fr_sub">Create your faculty account</p>
 
         <form action="{{ url_for('faculty_register') }}" method="POST">
-            <label>Full Name</label>
-            <input type="text" name="full_name" placeholder="Enter your full name (letters only)" pattern="[A-Za-z\s]+" title="Name should contain only alphabets and spaces" required>
+            <label data-i18n="lbl_full_name">Full Name</label>
+            <input type="text" name="full_name" placeholder="Enter your full name (letters only)" data-i18n-placeholder="ph_full_name" pattern="[A-Za-z\s]+" title="Name should contain only alphabets and spaces" data-i18n-title="title_name_pattern" required>
 
-            <label>Faculty ID</label>
-            <input type="text" name="faculty_id" placeholder="Enter your faculty ID" required>
+            <label data-i18n="lbl_faculty_id">Faculty ID</label>
+            <input type="text" name="faculty_id" placeholder="Enter your faculty ID" data-i18n-placeholder="ph_faculty_id" required>
 
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Enter valid email (e.g., faculty@gmail.com)" required>
+            <label data-i18n="lbl_email">Email</label>
+            <input type="email" name="email" placeholder="Enter valid email (e.g., faculty@gmail.com)" data-i18n-placeholder="ph_email_faculty" required>
 
-            <label>Department</label>
+            <label data-i18n="lbl_department">Department</label>
             <select name="department" required>
-                <option value="">Select department</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="Physics">Physics</option>
-                <option value="Chemistry">Chemistry</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Other">Other</option>
+                <option value="" data-i18n="opt_select_dept">Select department</option>
+                <option value="Mathematics" data-i18n="dept_math">Mathematics</option>
+                <option value="Physics" data-i18n="dept_physics">Physics</option>
+                <option value="Chemistry" data-i18n="dept_chemistry">Chemistry</option>
+                <option value="Computer Science" data-i18n="dept_cs">Computer Science</option>
+                <option value="Other" data-i18n="dept_other">Other</option>
             </select>
 
-            <label>Classes Taught</label>
+            <label data-i18n="lbl_classes_taught">Classes Taught</label>
             <div class="checkbox-group">
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 6"> Class 6
+                    <input type="checkbox" name="classes_taught" value="Class 6"> <span data-i18n="class_n" data-i18n-vars='{"n": 6}'>Class 6</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 7"> Class 7
+                    <input type="checkbox" name="classes_taught" value="Class 7"> <span data-i18n="class_n" data-i18n-vars='{"n": 7}'>Class 7</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 8"> Class 8
+                    <input type="checkbox" name="classes_taught" value="Class 8"> <span data-i18n="class_n" data-i18n-vars='{"n": 8}'>Class 8</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 9"> Class 9
+                    <input type="checkbox" name="classes_taught" value="Class 9"> <span data-i18n="class_n" data-i18n-vars='{"n": 9}'>Class 9</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 10"> Class 10
+                    <input type="checkbox" name="classes_taught" value="Class 10"> <span data-i18n="class_n" data-i18n-vars='{"n": 10}'>Class 10</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 11"> Class 11
+                    <input type="checkbox" name="classes_taught" value="Class 11"> <span data-i18n="class_n" data-i18n-vars='{"n": 11}'>Class 11</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" name="classes_taught" value="Class 12"> Class 12
+                    <input type="checkbox" name="classes_taught" value="Class 12"> <span data-i18n="class_n" data-i18n-vars='{"n": 12}'>Class 12</span>
                 </label>
             </div>
 
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Create a password (min 6 chars)" minlength="6" required>
+            <label data-i18n="lbl_password">Password</label>
+            <input type="password" name="password" placeholder="Create a password (min 6 chars)" data-i18n-placeholder="ph_create_password" minlength="6" required>
 
-            <label>Confirm Password</label>
-            <input type="password" name="confirm_password" placeholder="Confirm your password" minlength="6" required>
+            <label data-i18n="lbl_confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm your password" data-i18n-placeholder="ph_confirm_password" minlength="6" required>
 
-            <button type="submit">Register</button>
+            <button type="submit" data-i18n="btn_register">Register</button>
         </form>
 
-        <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+        <p><a href="{{ url_for('home') }}" data-i18n="back_home">Back to Home</a></p>
     </div>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

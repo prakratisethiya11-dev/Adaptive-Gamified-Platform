@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - Geometry Quest</title>
-    <script>
-    // Flask session se logged-in student ki ID yahan set hogi
-    window.currentStudentId = "{{ session['student_id'] }}";
-    </script>
-    <script src="{{ url_for('static', filename='offline_sync.js') }}"></script>
+    <title data-i18n="title_geometry">Study Treasure - Geometry Quest</title>
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -25,14 +21,14 @@
     <header class="app-header">
         <div class="logo-area">
             <span class="badge">ST</span>
-            <h1>Geometry Quest</h1>
+            <h1 data-i18n="gq_header">Geometry Quest</h1>
         </div>
         
         <div class="user-stats">
             <span id="coinsDisplay">🪙 {{ student_coins }}</span>
-            <span id="streakDisplay">🔥 Streak: {{ student_streak }} Days</span>
+            <span id="streakDisplay">🔥 <span data-i18n="streak_days" data-i18n-vars='{"n": {{ student_streak or 0 }} }'>Streak: {{ student_streak }} Days</span></span>
             <span style="color: #facc15; font-weight: bold; margin-left: 10px;">👤 {{ student_name }}</span>
-            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="margin-left: 15px;">Back to Subjects</a>
+            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="margin-left: 15px;" data-i18n="back_subjects">Back to Subjects</a>
         </div>
     </header>
 
@@ -41,43 +37,43 @@
         <!-- Zone Map Screen -->
         <section id="zoneMapScreen" class="screen active">
             <div class="welcome-banner">
-                <h2>Welcome Explorer! 🏰</h2>
-                <p>Select a zone to master 2D & 3D Geometry concepts and earn Gold Badges & Gems!</p>
+                <h2 data-i18n="gq_welcome">Welcome Explorer! 🏰</h2>
+                <p data-i18n="gq_welcome_desc">Select a zone to master 2D & 3D Geometry concepts and earn Gold Badges & Gems!</p>
             </div>
             
             <div class="zone-grid">
                 <div class="zone-card" data-zone="village">
                     <div class="zone-icon">📐</div>
-                    <h3>Shape Village</h3>
-                    <p>Learn 2D Shapes, properties, and basic formulas.</p>
-                    <button class="btn btn-primary">Enter Village</button>
+                    <h3 data-i18n="gq_village">Shape Village</h3>
+                    <p data-i18n="gq_village_desc">Learn 2D Shapes, properties, and basic formulas.</p>
+                    <button class="btn btn-primary" data-i18n="gq_village_btn">Enter Village</button>
                 </div>
                 <div class="zone-card" data-zone="perimeter">
                     <div class="zone-icon">🏃‍♂️</div>
-                    <h3>Perimeter Path</h3>
-                    <p>Master boundaries, side lengths, and missing dimensions.</p>
-                    <button class="btn btn-primary">Start Path</button>
+                    <h3 data-i18n="gq_perimeter">Perimeter Path</h3>
+                    <p data-i18n="gq_perimeter_desc">Master boundaries, side lengths, and missing dimensions.</p>
+                    <button class="btn btn-primary" data-i18n="gq_perimeter_btn">Start Path</button>
                 </div>
                 <div class="zone-card" data-zone="area">
                     <div class="zone-icon">🧩</div>
-                    <h3>Area Adventure</h3>
-                    <p>Calculate space inside 2D shapes & circles.</p>
-                    <button class="btn btn-primary">Explore Area</button>
+                    <h3 data-i18n="gq_area">Area Adventure</h3>
+                    <p data-i18n="gq_area_desc">Calculate space inside 2D shapes & circles.</p>
+                    <button class="btn btn-primary" data-i18n="gq_area_btn">Explore Area</button>
                 </div>
                 <div class="zone-card" data-zone="3d">
                     <div class="zone-icon">🧊</div>
-                    <h3>3D Dimension World</h3>
-                    <p>Rotate solids, calculate Volume and Surface Areas.</p>
-                    <button class="btn btn-primary">Enter 3D World</button>
+                    <h3 data-i18n="gq_3d">3D Dimension World</h3>
+                    <p data-i18n="gq_3d_desc">Rotate solids, calculate Volume and Surface Areas.</p>
+                    <button class="btn btn-primary" data-i18n="gq_3d_btn">Enter 3D World</button>
                 </div>
             </div>
 
             <div class="treasure-banner">
                 <div class="zone-card full-width" data-zone="treasure">
                     <div class="zone-icon">👑</div>
-                    <h3>Geometry Treasure Challenge</h3>
-                    <p>Mixed assessment across all topics. Complete quickly for maximum Stars & Rewards!</p>
-                    <button class="btn btn-gold">Start Master Challenge 🏆</button>
+                    <h3 data-i18n="gq_treasure">Geometry Treasure Challenge</h3>
+                    <p data-i18n="gq_treasure_desc">Mixed assessment across all topics. Complete quickly for maximum Stars & Rewards!</p>
+                    <button class="btn btn-gold" data-i18n="gq_treasure_btn">Start Master Challenge 🏆</button>
                 </div>
             </div>
         </section>
@@ -85,14 +81,14 @@
         <!-- Active Quest Screen -->
         <section id="questScreen" class="screen">
             <div class="quest-nav">
-                <button id="backToMapBtn" class="btn btn-secondary">⬅️ Map</button>
+                <button id="backToMapBtn" class="btn btn-secondary" data-i18n="gq_map">⬅️ Map</button>
                 <div class="progress-container">
-                    <span>Question <span id="qIndex">1</span>/<span id="qTotal">10</span></span>
+                    <span id="qProgress" data-i18n="gq_question_of" data-i18n-vars='{"i": 1, "total": 10}'>Question 1/10</span>
                     <div class="progress-bar"><div id="progressFill"></div></div>
                 </div>
                 <div class="quest-score">
-                    <span>⏱️ Time: <strong id="timerVal">0</strong>s</span>
-                    <span style="margin-left: 15px;">Score: <strong id="currentScore">0</strong></span>
+                    <span><span data-i18n="gq_time">⏱️ Time:</span> <strong id="timerVal">0</strong>s</span>
+                    <span style="margin-left: 15px;"><span data-i18n="gq_score">Score:</span> <strong id="currentScore">0</strong></span>
                 </div>
             </div>
 
@@ -100,7 +96,7 @@
                 <!-- Visual Box -->
                 <div class="visual-card">
                     <div class="visual-header">
-                        <h4 id="shapeTitle">Interactive Shape Visualizer</h4>
+                        <h4 id="shapeTitle" data-i18n="gq_visualizer">Interactive Shape Visualizer</h4>
                     </div>
                     
                     <div id="visualContainer" class="visual-container">
@@ -113,19 +109,19 @@
                 <div class="question-card">
                     <div class="guide-box">
                         <span class="avatar">🧙‍♂️</span>
-                        <p id="guideText">Solve this geometry puzzle carefully!</p>
+                        <p id="guideText" data-i18n="gq_guide">Solve this geometry puzzle carefully!</p>
                     </div>
 
-                    <h3 id="questionText">Question loading...</h3>
+                    <h3 id="questionText" data-i18n="gq_q_loading">Question loading...</h3>
 
                     <div class="answer-section">
                         <div id="numericInputBox" class="input-group">
-                            <label for="userAnswer">Your Answer:</label>
-                            <input type="number" id="userAnswer" step="any" placeholder="Enter number">
+                            <label for="userAnswer" data-i18n="gq_your_answer">Your Answer:</label>
+                            <input type="number" id="userAnswer" step="any" placeholder="Enter number" data-i18n-placeholder="gq_enter_number">
                         </div>
 
                         <div id="unitSelectBox" class="input-group">
-                            <label for="userUnit">Unit:</label>
+                            <label for="userUnit" data-i18n="gq_unit">Unit:</label>
                             <select id="userUnit">
                                 <option value="cm">cm</option>
                                 <option value="m">m</option>
@@ -142,9 +138,9 @@
                     <div id="feedbackBox" class="feedback-box hidden"></div>
 
                     <div class="action-buttons">
-                        <button id="hintBtn" class="btn btn-warning">💡 Hint (-10 pts)</button>
-                        <button id="submitBtn" class="btn btn-primary">Submit Answer 🚀</button>
-                        <button id="nextBtn" class="btn btn-success hidden">Next Question ➡️</button>
+                        <button id="hintBtn" class="btn btn-warning" data-i18n="gq_hint_btn">💡 Hint (-10 pts)</button>
+                        <button id="submitBtn" class="btn btn-primary" data-i18n="gq_submit">Submit Answer 🚀</button>
+                        <button id="nextBtn" class="btn btn-success hidden" data-i18n="gq_next">Next Question ➡️</button>
                     </div>
                 </div>
             </div>
@@ -153,30 +149,30 @@
         <!-- Final Reward Screen -->
         <section id="resultsScreen" class="screen">
             <div class="results-card">
-                <h2>🎉 Quest Completed!</h2>
+                <h2 data-i18n="gq_done">🎉 Quest Completed!</h2>
                 <div class="stars-row" id="starsRow">⭐⭐⭐</div>
                 
                 <div class="results-stats">
                     <div class="stat-box">
-                        <span class="stat-label">Total Score</span>
+                        <span class="stat-label" data-i18n="gq_total_score">Total Score</span>
                         <span class="stat-val" id="resScore">0</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-label">Time Spent</span>
+                        <span class="stat-label" data-i18n="gq_time_spent">Time Spent</span>
                         <span class="stat-val" id="resTime">0s</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-label">Coins Earned</span>
+                        <span class="stat-label" data-i18n="gq_coins_earned">Coins Earned</span>
                         <span class="stat-val" id="resCoins">+0</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-label">Reward Badge</span>
-                        <span class="stat-val" id="resBadge">None</span>
+                        <span class="stat-label" data-i18n="gq_reward_badge">Reward Badge</span>
+                        <span class="stat-val" id="resBadge" data-i18n="gq_none">None</span>
                     </div>
                 </div>
 
                 <!-- Updated finish button to trigger streak & points sync -->
-                <button id="finishQuestBtn" class="btn btn-gold" onclick="completeCurrentGame(25)">Return to Map 🗺️</button>
+                <button id="finishQuestBtn" class="btn btn-gold" onclick="completeCurrentGame(25)" data-i18n="gq_return_map">Return to Map 🗺️</button>
             </div>
         </section>
 
@@ -203,6 +199,8 @@
     </script>
 
     <!-- JS Files Link from static folder -->
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
     <script src="{{ url_for('static', filename='geometry_quest.js') }}"></script>
 </body>
 </html>

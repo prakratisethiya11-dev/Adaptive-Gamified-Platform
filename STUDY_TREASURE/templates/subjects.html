@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - Choose Subject</title>
+    <title data-i18n="title_subjects">Study Treasure - Choose Subject</title>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='subjects.css') }}">
 </head>
@@ -16,21 +16,21 @@
         </div>
 
         <nav>
-            <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('home') }}#about">About</a>
-            <a href="{{ url_for('home') }}#contact">Contact</a>
+            <a href="{{ url_for('home') }}" data-i18n="nav_home">Home</a>
+            <a href="{{ url_for('home') }}#about" data-i18n="nav_about">About</a>
+            <a href="{{ url_for('home') }}#contact" data-i18n="nav_contact">Contact</a>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <span style="color: #facc15; font-weight: bold; background: rgba(250, 204, 21, 0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(250, 204, 21, 0.3); font-family: 'Times New Roman', Times, serif;">
-                    Streak: {{ session.get('student_streak', 0) }} Days
+                    <span data-i18n="streak_days" data-i18n-vars='{"n": {{ session.get("student_streak", 0) }} }'>Streak: {{ session.get('student_streak', 0) }} Days</span>
                 </span>
             </div>
-            <a href="{{ url_for('home') }}" class="logout-btn" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-family: 'Times New Roman', Times, serif;">Logout</a>
+            <a href="{{ url_for('home') }}" class="logout-btn" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-family: 'Times New Roman', Times, serif;" data-i18n="btn_logout">Logout</a>
         </nav>
     </header>
 
     <!-- Main Content Section -->
     <main class="subjects-container">
-        <h2>Choose a subject to explore exciting topics and start learning!</h2>
+        <h2 data-i18n="subjects_prompt">Choose a subject to explore exciting topics and start learning!</h2>
 
         <div class="subject-grid">
             
@@ -39,8 +39,8 @@
                 <div class="icon-circle">
                     <span class="emoji">📊</span>
                 </div>
-                <h3>Mathematics</h3>
-                <p>Explore numbers, shapes, and mathematical concepts</p>
+                <h3 data-i18n="math_title">Mathematics</h3>
+                <p data-i18n="sub_math_desc">Explore numbers, shapes, and mathematical concepts</p>
             </div>
 
             <!-- Card 2: Science -->
@@ -48,8 +48,8 @@
                 <div class="icon-circle">
                     <span class="emoji">🔬</span>
                 </div>
-                <h3>Science</h3>
-                <p>Discover the wonders of the natural world</p>
+                <h3 data-i18n="science_title">Science</h3>
+                <p data-i18n="sub_science_desc">Discover the wonders of the natural world</p>
             </div>
 
             <!-- Card 3: Problem Solving -->
@@ -57,8 +57,8 @@
                 <div class="icon-circle">
                     <span class="emoji">🧠</span>
                 </div>
-                <h3>Problem Solving & Critical Thinking</h3>
-                <p>Develop critical thinking and logical reasoning</p>
+                <h3 data-i18n="sub_problem">Problem Solving & Critical Thinking</h3>
+                <p data-i18n="sub_problem_desc">Develop critical thinking and logical reasoning</p>
             </div>
 
             <!-- Card 4: Technology -->
@@ -66,13 +66,15 @@
                 <div class="icon-circle">
                     <span class="emoji">💻</span>
                 </div>
-                <h3>Technology & Everyday STEM</h3>
-                <p>Learn about modern technology and everyday STEM</p>
+                <h3 data-i18n="sub_tech">Technology & Everyday STEM</h3>
+                <p data-i18n="sub_tech_desc">Learn about modern technology and everyday STEM</p>
             </div>
 
         </div>
     </main>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
     <script>
         const studentClass = "{{ student_class }}".toLowerCase();
 
@@ -81,17 +83,17 @@
                 if (studentClass.includes('6')) {
                     window.location.href = "{{ url_for('math_hub') }}";
                 } else {
-                    alert("No Quiz and Games uploaded");
+                    alert(t("no_quiz"));
                 }
             } else if (subject === 'science') {
                 // Class 11 and 12 go to adaptive quiz hub, 7 and 8 go to their respective science hubs via Flask route
                 if (studentClass.includes('11') || studentClass.includes('12') || studentClass.includes('7') || studentClass.includes('8')) {
                     window.location.href = "{{ url_for('science_hub') }}";
                 } else {
-                    alert("No Quiz and Games uploaded");
+                    alert(t("no_quiz"));
                 }
             } else {
-                alert("No Quiz and Games uploaded");
+                alert(t("no_quiz"));
             }
         }
     </script>

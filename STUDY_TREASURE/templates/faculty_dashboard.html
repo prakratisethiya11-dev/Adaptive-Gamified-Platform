@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculty Dashboard - Study Treasure</title>
+    <title data-i18n="title_faculty_dash">Faculty Dashboard - Study Treasure</title>
     <style>
         body {
             background: url("{{ url_for('static', filename='dashboard.png') }}");
@@ -119,46 +119,55 @@
     </style>
 </head>
 <body>
+{% macro class_label(value) -%}
+{%- set v = value|string|trim -%}
+{%- set d = v.lower().replace('th', '').replace('class', '')|trim -%}
+{%- if d in ['6', '7', '8', '9', '10', '11', '12'] -%}<span data-i18n="cls_{{ d }}">{{ v }}</span>{%- else -%}{{ v }}{%- endif -%}
+{%- endmacro %}
 
     <div class="dashboard-container">
-        <a href="{{ url_for('home') }}" class="btn-logout">Logout</a>
-        <h2>Welcome, Prof. {{ faculty_name }}</h2>
-        <p><strong>Registered Classes:</strong> {{ classes }}</p>
+        <a href="{{ url_for('home') }}" class="btn-logout" data-i18n="btn_logout">Logout</a>
+        <h2><span data-i18n="welcome_prof">Welcome, Prof.</span> {{ faculty_name }}</h2>
+        <p><strong data-i18n="registered_classes">Registered Classes:</strong>
+            {%- for c in classes.split(',') %}{% set cn = c|trim|lower|replace('class', '')|trim %}
+            {% if cn.isdigit() %}<span data-i18n="class_n" data-i18n-vars='{"n": {{ cn }} }'>{{ c|trim }}</span>{% else %}{{ c|trim }}{% endif %}{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        </p>
 
         <!-- Quick Summary Cards -->
         <div class="summary-cards" style="margin-top: 25px;">
             <div class="card">
-                <h4>Total Students Enrolled</h4>
+                <h4 data-i18n="total_students">Total Students Enrolled</h4>
                 <p>{{ students|length }}</p>
             </div>
             <div class="card">
-                <h4>Average Score</h4>
+                <h4 data-i18n="avg_score">Average Score</h4>
                 <p>
                     {% set ns = namespace(total=0) %}
                     {% for s in students %}{% set ns.total = ns.total + s.total_coins %}{% endfor %}
-                    {{ (ns.total / students|length)|round(1) if students|length > 0 else 0 }} Coins
+                    {{ (ns.total / students|length)|round(1) if students|length > 0 else 0 }} <span data-i18n="coins_unit">Coins</span>
                 </p>
             </div>
         </div>
 
         <!-- Analytical Tab Navigation -->
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="openTab(event, 'overallTab')">📊 Overall Analytics</button>
-            <button class="tab-btn" onclick="openTab(event, 'subjectTab')">📚 Subject-wise Analytics</button>
+            <button class="tab-btn active" onclick="openTab(event, 'overallTab')" data-i18n="tab_overall">📊 Overall Analytics</button>
+            <button class="tab-btn" onclick="openTab(event, 'subjectTab')" data-i18n="tab_subject">📚 Subject-wise Analytics</button>
         </div>
 
         <!-- Overall Analytics Tab -->
         <div id="overallTab" class="tab-content active">
-            <h3 style="color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">Overall Student Performance</h3>
+            <h3 style="color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;" data-i18n="overall_heading">Overall Student Performance</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>Student Name</th>
-                        <th>Roll Number</th>
-                        <th>Email</th>
-                        <th>Class</th>
-                        <th>Total Scored Points</th>
-                        <th>Current Streak</th>
+                        <th data-i18n="th_student_name">Student Name</th>
+                        <th data-i18n="th_roll">Roll Number</th>
+                        <th data-i18n="th_email">Email</th>
+                        <th data-i18n="th_class">Class</th>
+                        <th data-i18n="th_total_points">Total Scored Points</th>
+                        <th data-i18n="th_streak">Current Streak</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -168,14 +177,14 @@
                             <td>{{ student.full_name }}</td>
                             <td>{{ student.roll_number }}</td>
                             <td>{{ student.email }}</td>
-                            <td>{{ student.student_class }}</td>
+                            <td>{{ class_label(student.student_class) }}</td>
                             <td style="color: #2563eb; font-weight: bold;">🪙 {{ student.total_coins }}</td>
-                            <td style="color: #d97706; font-weight: bold;">🔥 {{ student.current_streak }} Days</td>
+                            <td style="color: #d97706; font-weight: bold;">🔥 {{ student.current_streak }} <span data-i18n="days_unit">Days</span></td>
                         </tr>
                         {%- endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="6" style="text-align: center; color: #64748b;">No students found for your registered classes.</td>
+                            <td colspan="6" style="text-align: center; color: #64748b;" data-i18n="no_students">No students found for your registered classes.</td>
                         </tr>
                     {% endif %}
                 </tbody>
@@ -184,17 +193,17 @@
 
         <!-- Subject-wise Analytics Tab -->
         <div id="subjectTab" class="tab-content">
-            <h3 style="color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">Subject-wise Performance Breakdown</h3>
-            <p style="color: #64748b; font-size: 14px;">Categorized based on STEM curriculum tracks (Mathematics & Science Hubs)</p>
+            <h3 style="color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;" data-i18n="subject_heading">Subject-wise Performance Breakdown</h3>
+            <p style="color: #64748b; font-size: 14px;" data-i18n="subject_note">Categorized based on STEM curriculum tracks (Mathematics & Science Hubs)</p>
             <table>
                 <thead>
                     <tr>
-                        <th>Student Name</th>
-                        <th>Class</th>
-                        <th>Mathematics Track</th>
-                        <th>Science Track</th>
-                        <th>Combined Mastery</th>
-                        <th>Streak</th>
+                        <th data-i18n="th_student_name">Student Name</th>
+                        <th data-i18n="th_class">Class</th>
+                        <th data-i18n="th_math_track">Mathematics Track</th>
+                        <th data-i18n="th_science_track">Science Track</th>
+                        <th data-i18n="th_combined">Combined Mastery</th>
+                        <th data-i18n="th_streak_short">Streak</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -202,16 +211,16 @@
                         {%- for student in students %}
                         <tr>
                             <td>{{ student.full_name }}</td>
-                            <td>{{ student.student_class }}</td>
-                            <td>{{ (student.total_coins * 0.5) | int }} pts</td>
-                            <td>{{ (student.total_coins * 0.5) | int }} pts</td>
+                            <td>{{ class_label(student.student_class) }}</td>
+                            <td>{{ (student.total_coins * 0.5) | int }} <span data-i18n="pts_unit">pts</span></td>
+                            <td>{{ (student.total_coins * 0.5) | int }} <span data-i18n="pts_unit">pts</span></td>
                             <td style="color: #16a34a; font-weight: bold;">🪙 {{ student.total_coins }}</td>
-                            <td style="color: #d97706; font-weight: bold;">🔥 {{ student.current_streak }} Days</td>
+                            <td style="color: #d97706; font-weight: bold;">🔥 {{ student.current_streak }} <span data-i18n="days_unit">Days</span></td>
                         </tr>
                         {%- endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="6" style="text-align: center; color: #64748b;">No subject analytics available.</td>
+                            <td colspan="6" style="text-align: center; color: #64748b;" data-i18n="no_subject_data">No subject analytics available.</td>
                         </tr>
                     {% endif %}
                 </tbody>
@@ -237,5 +246,7 @@
         }
     </script>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

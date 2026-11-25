@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - Adaptive Quiz Hub</title>
+    <title data-i18n="title_attempt">Study Treasure - Adaptive Quiz Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
@@ -134,11 +134,11 @@
 
     <div class="quiz-hub-container">
         <div class="hub-banner">
-            <h2>Adaptive Quiz Challenge Arena</h2>
-            <p>Test your knowledge! Difficulty levels adapt dynamically based on your accuracy & streak.</p>
+            <h2 data-i18n="aq_heading">Adaptive Quiz Challenge Arena</h2>
+            <p data-i18n="aq_desc">Test your knowledge! Difficulty levels adapt dynamically based on your accuracy & streak.</p>
         </div>
 
-        <div class="class-badge" id="studentClassBadge">Loading Class...</div>
+        <div class="class-badge" id="studentClassBadge" data-i18n="aq_loading">Loading Class...</div>
 
         <!-- Quiz Sections -->
         <div class="chapter-grid">
@@ -147,19 +147,19 @@
             <div class="quiz-group class-11-box hidden-section">
                 <a href="{{ url_for('quiz_page', chapter='units_measurement') }}" class="chapter-card">
                     <div>
-                        <h3>Units & Measurements</h3>
-                        <p>Physics Chapter 1 - Master dimensions, significant figures, and error analysis.</p>
+                        <h3 data-i18n="aq_ch_units">Units & Measurements</h3>
+                        <p data-i18n="aq_ch_units_desc">Physics Chapter 1 - Master dimensions, significant figures, and error analysis.</p>
                     </div>
-                    <span class="start-tag">Start Quiz</span>
+                    <span class="start-tag" data-i18n="start_quiz">Start Quiz</span>
                 </a>
             </div>
             <div class="quiz-group class-11-box hidden-section">
                 <a href="{{ url_for('quiz_page', chapter='motion_straight_line') }}" class="chapter-card">
                     <div>
-                        <h3>Motion in a Straight Line</h3>
-                        <p>Physics Chapter 2 - Explore velocity, acceleration-time graphs, and kinematic equations.</p>
+                        <h3 data-i18n="aq_ch_motion">Motion in a Straight Line</h3>
+                        <p data-i18n="aq_ch_motion_desc">Physics Chapter 2 - Explore velocity, acceleration-time graphs, and kinematic equations.</p>
                     </div>
-                    <span class="start-tag">Start Quiz</span>
+                    <span class="start-tag" data-i18n="start_quiz">Start Quiz</span>
                 </a>
             </div>
 
@@ -167,34 +167,36 @@
             <div class="quiz-group class-12-box hidden-section">
                 <a href="{{ url_for('quiz_page', chapter='solutions') }}" class="chapter-card">
                     <div>
-                        <h3>Solutions</h3>
-                        <p>Chemistry Chapter 1 - Concentration terms, Raoult's Law & colligative properties.</p>
+                        <h3 data-i18n="aq_ch_solutions">Solutions</h3>
+                        <p data-i18n="aq_ch_solutions_desc">Chemistry Chapter 1 - Concentration terms, Raoult's Law & colligative properties.</p>
                     </div>
-                    <span class="start-tag">Start Quiz</span>
+                    <span class="start-tag" data-i18n="start_quiz">Start Quiz</span>
                 </a>
             </div>
             <div class="quiz-group class-12-box hidden-section">
                 <a href="{{ url_for('quiz_page', chapter='electrochemistry') }}" class="chapter-card">
                     <div>
-                        <h3>Electrochemistry</h3>
-                        <p>Chemistry Chapter 2 - Electrochemical cells, Nernst equation, and Kohlrausch's law.</p>
+                        <h3 data-i18n="aq_ch_electro">Electrochemistry</h3>
+                        <p data-i18n="aq_ch_electro_desc">Chemistry Chapter 2 - Electrochemical cells, Nernst equation, and Kohlrausch's law.</p>
                     </div>
-                    <span class="start-tag">Start Quiz</span>
+                    <span class="start-tag" data-i18n="start_quiz">Start Quiz</span>
                 </a>
             </div>
 
         </div>
 
         <!-- Fallback message if class doesn't match -->
-        <div id="noQuizAlert" class="no-quiz-msg hidden-section">
+        <div id="noQuizAlert" class="no-quiz-msg hidden-section" data-i18n="aq_no_quiz">
             No Quiz and Games uploaded for your registered class level.
         </div>
 
         <div>
-            <a href="{{ url_for('subjects') }}" class="back-btn">&larr; Back to Subjects Dashboard</a>
+            <a href="{{ url_for('subjects') }}" class="back-btn" data-i18n="aq_back">&larr; Back to Subjects Dashboard</a>
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
     <script>
         const studentClass = "{{ student_class }}".toLowerCase();
         const badge = document.getElementById("studentClassBadge");
@@ -204,13 +206,13 @@
         const alertBox = document.getElementById("noQuizAlert");
 
         if (studentClass.includes("11")) {
-            badge.innerText = "Registered Class: 11th (Physics Hub)";
+            i18n.set(badge, "aq_reg_11");
             class11Boxes.forEach(box => box.classList.remove("hidden-section"));
         } else if (studentClass.includes("12")) {
-            badge.innerText = "Registered Class: 12th (Chemistry Hub)";
+            i18n.set(badge, "aq_reg_12");
             class12Boxes.forEach(box => box.classList.remove("hidden-section"));
         } else {
-            badge.innerText = `Registered Class: ${studentClass.toUpperCase() || 'General'}`;
+            i18n.set(badge, "aq_reg_other", { cls: studentClass ? studentClass.toUpperCase() : "@aq_general" });
             alertBox.classList.remove("hidden-section");
         }
     </script>

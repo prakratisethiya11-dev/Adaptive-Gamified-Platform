@@ -1,14 +1,14 @@
-let currentSolution = null;
-let currentType = null;
+let currentSolution = null;   // key such as 'lemon', 'soap', 'vinegar', 'tap', 'baking'
+let currentType = null;       // 'acid' | 'base' | 'neutral'
 let testedCount = 0;
 let score = 0;
 
-function selectSolution(name, type) {
-    currentSolution = name;
+function selectSolution(key, type) {
+    currentSolution = key;
     currentType = type;
     const selInfo = document.getElementById('selectedInfo');
-    if(selInfo) selInfo.innerHTML = `Current: <b style="color: #f472b6;">${name}</b>`;
-    
+    if(selInfo) i18n.set(selInfo, 'll_current', { name: '@sol_' + key }, true);
+
     let liquid = document.getElementById('liquidContent');
     if(liquid) {
         liquid.style.height = '60%';
@@ -19,34 +19,26 @@ function selectSolution(name, type) {
 
     const sRes = document.getElementById('stripResult');
     const fMsg = document.getElementById('feedbackMsg');
-    if(sRes) sRes.innerText = "Solution ready! Click a Litmus Strip to test.";
-    if(fMsg) fMsg.innerText = "";
+    if(sRes) i18n.set(sRes, 'll_ready');
+    if(fMsg) i18n.set(fMsg, null);
 }
 
 function testStrip(stripColor) {
     if(!currentSolution) {
-        alert("Please select a solution from the shelf first!");
+        alert(t('ll_select_first'));
         return;
     }
-    
+
     let resBox = document.getElementById('stripResult');
     if(!resBox) return;
 
-    if(currentType === 'acid') {
-        if(stripColor === 'red') resBox.innerHTML = `🔴 Red Litmus remains <b>RED</b>`;
-        else resBox.innerHTML = `🔴 Blue Litmus turns <b>RED</b>!`;
-    } else if(currentType === 'base') {
-        if(stripColor === 'red') resBox.innerHTML = `🔵 Red Litmus turns <b>BLUE</b>!`;
-        else resBox.innerHTML = `🔵 Blue Litmus remains <b>BLUE</b>`;
-    } else {
-        if(stripColor === 'red') resBox.innerHTML = `🟢 Red Litmus remains <b>RED</b>`;
-        else resBox.innerHTML = `🟢 Blue Litmus remains <b>BLUE</b>`;
-    }
+    // keys: ll_acid_red, ll_acid_blue, ll_base_red, ll_base_blue, ll_neutral_red, ll_neutral_blue
+    i18n.set(resBox, 'll_' + currentType + '_' + stripColor, null, true);
 }
 
 function classify(guessType) {
     if(!currentSolution) {
-        alert("Please test a solution first!");
+        alert(t('ll_test_first'));
         return;
     }
     let fb = document.getElementById('feedbackMsg');
@@ -54,10 +46,10 @@ function classify(guessType) {
 
     if(guessType === currentType) {
         fb.style.color = '#34d399';
-        fb.innerText = `✨ Correct! ${currentSolution} is a ${currentType.toUpperCase()}!`;
+        i18n.set(fb, 'll_correct', { name: '@sol_' + currentSolution, type: '@type_' + currentType });
         score += 20;
         testedCount++;
-        
+
         let earnedCoins = 20;
 
         // Send POST request to backend to update Database & Streak securely
@@ -88,6 +80,6 @@ function classify(guessType) {
         }
     } else {
         fb.style.color = '#f87171';
-        fb.innerText = `❌ Incorrect. Look closely at the color change!`;
+        i18n.set(fb, 'll_incorrect');
     }
 }

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="{{ url_for('static', filename='offline_sync.js') }}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - ML Adaptive STEM Workbench</title>
+    <title data-i18n="title_quiz">Study Treasure - ML Adaptive STEM Workbench</title>
     <style>
         body { 
             background: #0f172a; 
@@ -106,14 +105,14 @@
         <!-- Single Clean Header -->
         <div class="quiz-header">
             <div>
-                <span id="slotProgress" style="color: #94a3b8; font-size: 14px; margin-right: 10px;">Q 1/5</span>
-                <span id="levelBadge" class="badge-level level-medium">Level: Medium</span>
+                <span id="slotProgress" style="color: #94a3b8; font-size: 14px; margin-right: 10px;" data-i18n="q_progress" data-i18n-vars='{"n": 1, "total": 5}'>Q 1/5</span>
+                <span id="levelBadge" class="badge-level level-medium" data-i18n="level_label" data-i18n-vars='{"level": "@level_medium"}'>Level: Medium</span>
             </div>
-            <div class="stats-box">👤 {{ session.get('student_name', 'Student') }} | 🪙 Coins: <span id="coinCount">{{ session.get('student_coins', 0) }}</span> | ⭐ Streak: <span id="streakCount">0</span></div>
+            <div class="stats-box">👤 {{ session.get('student_name', 'Student') }} | 🪙 <span data-i18n="coins_label">Coins</span>: <span id="coinCount">{{ session.get('student_coins', 0) }}</span> | ⭐ <span data-i18n="streak_label">Streak</span>: <span id="streakCount">0</span></div>
         </div>
 
         <div id="questionBox">
-            <h3 id="questionTitle" class="question-text">Initializing ML Adaptive Slot...</h3>
+            <h3 id="questionTitle" class="question-text" data-i18n="q_loading">Initializing ML Adaptive Slot...</h3>
             <div id="optionsBox" class="options-list"></div>
         </div>
     </div>
@@ -121,13 +120,15 @@
     <!-- Reward Modal -->
     <div id="rewardModal" class="modal">
         <div class="modal-content">
-            <h2>🎉 5-Question Slot Completed!</h2>
+            <h2 data-i18n="quiz_done">🎉 5-Question Slot Completed!</h2>
             <p style="font-size: 32px; margin: 15px 0;">⭐⭐⭐</p>
             <p id="finalScoreText" style="color: #cbd5e1; font-size: 17px; margin-bottom: 20px;"></p>
-            <a href="{{ url_for('subjects') }}" class="btn">Back to Subjects 🚀</a>
+            <a href="{{ url_for('subjects') }}" class="btn" data-i18n="quiz_back">Back to Subjects 🚀</a>
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
     <script>
         let startTime = Date.now();
 
@@ -142,11 +143,12 @@
                     return;
                 }
 
-                document.getElementById("slotProgress").innerText = `Q ${data.question_number}/${data.total_slot_questions}`;
+                i18n.set(document.getElementById("slotProgress"), "q_progress", { n: data.question_number, total: data.total_slot_questions });
                 document.getElementById("questionTitle").innerText = `${data.question_number}. ${data.question_text}`;
                 
                 let badge = document.getElementById("levelBadge");
-                badge.innerText = `Level: ${data.difficulty.toUpperCase()}`;
+                const lvl = String(data.difficulty).toLowerCase();
+                i18n.set(badge, "level_label", { level: ["easy", "medium", "hard"].includes(lvl) ? "@level_" + lvl : lvl.toUpperCase() });
                 badge.className = `badge-level level-${data.difficulty.toLowerCase()}`;
 
                 document.getElementById("coinCount").innerText = data.coins;
@@ -187,7 +189,7 @@
                 const resData = await response.json();
 
                 if (resData.error) {
-                    alert(resData.error);
+                    alert(i18n.tServer(resData.error));
                     return;
                 }
 
@@ -211,7 +213,7 @@
         }
 
         function showRewardModal(totalCoins) {
-            document.getElementById("finalScoreText").innerText = `You earned ${totalCoins} Coins in this adaptive slot and updated your mastery profile!`;
+            i18n.set(document.getElementById("finalScoreText"), "quiz_earned", { n: totalCoins });
             document.getElementById("rewardModal").style.display = "flex";
         }
 

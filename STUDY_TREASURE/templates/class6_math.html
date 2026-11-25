@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - Class 6 Mathematics</title>
+    <title data-i18n="title_class6">Study Treasure - Class 6 Mathematics</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="main-container" style="text-align: center; padding: 50px;">
-        <h2>📐 Class 6 Mathematics Hub</h2>
-        <p style="margin: 20px 0; color: #0b1118;">Master shapes, perimeters, and areas through our interactive adventure!</p>
+        <h2 data-i18n="c6_heading">📐 Class 6 Mathematics Hub</h2>
+        <p style="margin: 20px 0; color: #0b1118;" data-i18n="c6_desc">Master shapes, perimeters, and areas through our interactive adventure!</p>
         
         <div style="margin-top: 30px;">
-            <a href="{{ url_for('geometry_quest') }}" class="btn btn-gold" style="padding: 15px 30px; font-size: 18px; text-decoration: none; border-radius: 10px; background: #facc15; color: #000; font-weight: bold; display: inline-block;">
+            <a href="{{ url_for('geometry_quest') }}" class="btn btn-gold" style="padding: 15px 30px; font-size: 18px; text-decoration: none; border-radius: 10px; background: #facc15; color: #000; font-weight: bold; display: inline-block;" data-i18n="c6_play">
                 Play Geometry Quest: The Shape Explorer 
             </a>
         </div>
         
         <div style="margin-top: 30px;">
-            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="padding: 10px 20px; background: rgba(255,255,255,0.15); color: white; text-decoration: none; border-radius: 8px;">Back to Subjects</a>
+            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="padding: 10px 20px; background: rgba(255,255,255,0.15); color: white; text-decoration: none; border-radius: 8px;" data-i18n="back_subjects">Back to Subjects</a>
         </div>
     </div>
+
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
 </body>
 </html>

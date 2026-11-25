@@ -2,13 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script>
-    // Flask session se logged-in student ki ID yahan set hogi
-    window.currentStudentId = "{{ session['student_id'] }}";
-    </script>
-    <script src="{{ url_for('static', filename='offline_sync.js') }}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Treasure - Virtual Litmus Test Lab</title>
+    <title data-i18n="title_litmus">Study Treasure - Virtual Litmus Test Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='litmus_lab.css') }}">
 </head>
@@ -17,60 +12,59 @@
     <header class="app-header">
         <div class="logo-area">
             <span class="badge">ST</span>
-            <h1>Virtual Litmus Test Lab</h1>
+            <h1 data-i18n="ll_header">Virtual Litmus Test Lab</h1>
         </div>
         <div class="user-stats">
             <span id="coinsDisplay">🪙 {{ student_coins }}</span>
-            <span id="streakDisplay">🔥 Streak: {{ student_streak }} Days</span>
+            <span id="streakDisplay">🔥 <span data-i18n="streak_days" data-i18n-vars='{"n": {{ student_streak or 0 }} }'>Streak: {{ student_streak }} Days</span></span>
             <span style="color: #facc15; font-weight: bold; margin-left: 10px;">👤 {{ student_name }}</span>
-            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="margin-left: 15px;">Back to Subjects</a>
+            <a href="{{ url_for('subjects') }}" class="btn btn-secondary" style="margin-left: 15px;" data-i18n="back_subjects">Back to Subjects</a>
         </div>
         
     </header>
 
     <main class="lab-container">
         <div class="lab-header-banner">
-            <h2>🧪 Chemistry Lab: Acids & Bases</h2>
-            <p>Select a solution, dip the litmus paper, observe the color change, and classify it!</p>
+            <h2 data-i18n="ll_banner">🧪 Chemistry Lab: Acids & Bases</h2>
+            <p data-i18n="ll_banner_desc">Select a solution, dip the litmus paper, observe the color change, and classify it!</p>
         </div>
 
-        
         <div class="lab-workspace">
             <!-- Chemicals Shelf -->
             <div class="shelf-card">
-                <h3>Select Solution</h3>
+                <h3 data-i18n="ll_select_solution">Select Solution</h3>
                 <div class="bottles-grid">
-                    <button class="bottle-btn" onclick="selectSolution('Lemon Juice', 'acid')">🍋 Lemon Juice</button>
-                    <button class="bottle-btn" onclick="selectSolution('Soap Water', 'base')">🧼 Soap Water</button>
-                    <button class="bottle-btn" onclick="selectSolution('Vinegar', 'acid')">🍾 Vinegar</button>
-                    <button class="bottle-btn" onclick="selectSolution('Tap Water', 'neutral')">💧 Tap Water</button>
-                    <button class="bottle-btn" onclick="selectSolution('Baking Soda', 'base')">🧁 Baking Soda</button>
+                    <button class="bottle-btn" onclick="selectSolution('lemon', 'acid')" data-i18n="ll_btn_lemon">🍋 Lemon Juice</button>
+                    <button class="bottle-btn" onclick="selectSolution('soap', 'base')" data-i18n="ll_btn_soap">🧼 Soap Water</button>
+                    <button class="bottle-btn" onclick="selectSolution('vinegar', 'acid')" data-i18n="ll_btn_vinegar">🍾 Vinegar</button>
+                    <button class="bottle-btn" onclick="selectSolution('tap', 'neutral')" data-i18n="ll_btn_tap">💧 Tap Water</button>
+                    <button class="bottle-btn" onclick="selectSolution('baking', 'base')" data-i18n="ll_btn_baking">🧁 Baking Soda</button>
                 </div>
-                <div id="selectedInfo" class="selected-info">Current: <b>None Selected</b></div>
+                <div id="selectedInfo" class="selected-info" data-i18n-html="ll_current_none">Current: <b>None Selected</b></div>
             </div>
 
             <!-- Testing Bench -->
             <div class="bench-card">
-                <h3>Testing Beaker & Strips</h3>
+                <h3 data-i18n="ll_bench">Testing Beaker & Strips</h3>
                 <div class="beaker-area">
                     <div class="beaker">
                         <div id="liquidContent" class="liquid"></div>
                     </div>
                     <div class="strips-tray">
-                        <div class="strip red-strip" onclick="testStrip('red')">Red Litmus Strip</div>
-                        <div class="strip blue-strip" onclick="testStrip('blue')">Blue Litmus Strip</div>
+                        <div class="strip red-strip" onclick="testStrip('red')" data-i18n="ll_red_strip">Red Litmus Strip</div>
+                        <div class="strip blue-strip" onclick="testStrip('blue')" data-i18n="ll_blue_strip">Blue Litmus Strip</div>
                     </div>
                 </div>
-                <div id="stripResult" class="strip-result">Dip a strip into the solution!</div>
+                <div id="stripResult" class="strip-result" data-i18n="ll_dip">Dip a strip into the solution!</div>
             </div>
 
             <!-- Classification Panel -->
             <div class="control-card">
-                <h3>Classify Solution</h3>
+                <h3 data-i18n="ll_classify">Classify Solution</h3>
                 <div class="classify-buttons">
-                    <button class="btn btn-acid" onclick="classify('acid')">🔴 Acid</button>
-                    <button class="btn btn-base" onclick="classify('base')">🔵 Base</button>
-                    <button class="btn btn-neutral" onclick="classify('neutral')">🟢 Neutral</button>
+                    <button class="btn btn-acid" onclick="classify('acid')" data-i18n="ll_btn_acid">🔴 Acid</button>
+                    <button class="btn btn-base" onclick="classify('base')" data-i18n="ll_btn_base">🔵 Base</button>
+                    <button class="btn btn-neutral" onclick="classify('neutral')" data-i18n="ll_btn_neutral">🟢 Neutral</button>
                 </div>
                 <div id="feedbackMsg" class="feedback-msg"></div>
             </div>
@@ -80,11 +74,11 @@
     <!-- Reward Modal -->
     <div id="rewardModal" class="modal hidden">
         <div class="modal-content">
-            <h2>🎉 Lab Experiment Successful!</h2>
+            <h2 data-i18n="ll_reward_title">🎉 Lab Experiment Successful!</h2>
             <div class="stars-row">⭐⭐⭐</div>
-            <p id="rewardText">You classified all substances correctly!</p>
+            <p id="rewardText" data-i18n="ll_reward_text">You classified all substances correctly!</p>
             <!-- Updated button to trigger streak and points update -->
-            <button class="btn btn-primary" onclick="completeCurrentGame(20)">Play Again 🚀</button>
+            <button class="btn btn-primary" onclick="completeCurrentGame(20)" data-i18n="ll_play_again">Play Again 🚀</button>
         </div>
     </div>
 
@@ -108,6 +102,8 @@
     }
     </script>
     
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='i18n.js') }}"></script>
     <script src="{{ url_for('static', filename='litmus_lab.js') }}"></script>
 </body>
 </html>

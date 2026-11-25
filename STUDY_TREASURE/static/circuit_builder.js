@@ -3,7 +3,7 @@ let circuitScore = 0;
 
 function addComponent(name) {
     if(addedComponents.includes(name)) {
-        alert(`${name} is already added to the board!`);
+        alert(t('cb_already_added', { name: '@cb_name_' + name.toLowerCase() }));
         return;
     }
     addedComponents.push(name);
@@ -13,14 +13,15 @@ function addComponent(name) {
 function renderBoard() {
     let board = document.getElementById('circuitBoard');
     if(addedComponents.length === 0) {
-        board.innerHTML = `<p class="board-placeholder">Click components from left panel to assemble your circuit sequence here!</p>`;
+        board.innerHTML = '<p class="board-placeholder" data-i18n="cb_placeholder"></p>';
+        i18n.apply(board);
         return;
     }
     board.innerHTML = '';
     addedComponents.forEach(comp => {
         let div = document.createElement('div');
         div.className = 'added-comp';
-        div.innerText = comp;
+        i18n.set(div, 'cb_name_' + comp.toLowerCase());
         board.appendChild(div);
     });
 }
@@ -29,7 +30,7 @@ function resetBoard() {
     addedComponents = [];
     renderBoard();
     document.getElementById('bulbVisual').className = 'bulb-off';
-    document.getElementById('statusText').innerText = "Circuit Incomplete";
+    i18n.set(document.getElementById('statusText'), 'cb_incomplete');
     document.getElementById('statusText').style.color = '#f87171';
 }
 
@@ -44,7 +45,7 @@ function testCircuit() {
 
     if(hasBattery && hasSwitch && hasBulb && hasWire) {
         bulb.className = 'bulb-on';
-        status.innerText = "✨ Circuit Complete! Bulb is Glowing!";
+        i18n.set(status, 'cb_complete');
         status.style.color = '#34d399';
         
         let earnedCoins = 25; // Reward coins for completing the circuit
@@ -57,60 +58,27 @@ function testCircuit() {
         }
 
         // Send POST request to backend to update Database & Streak securely
-        // fetch('/api/complete_game', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({ coins: earnedCoins })
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     if (data.status === 'success') {
-        //         console.log("Database updated successfully! New Streak:", data.streak, "Total Coins:", data.coins);
-        //         if(coinsElem) {
-        //             coinsElem.innerText = `🪙 ${data.coins}`; // Sync with true database coin count
-        //         }
-        //     } else {
-        //         console.warn("Failed to update database backend:", data);
-        //     }
-        // })
-        // .catch(error => {
-        //     console.error("Error communicating with backend API:", error);
-        // });
-
-        // Payload taiyar karein jo backend aur offline sync dono ke liye use hoga
-        let gameResult = {
-            student_id: window.currentStudentId, // Jinja2 se aane wali ID
-            activity_type: "circuit_builder",     // Game ka naam
-            score: 100,                           // Agar score ho toh
-            points_earned: earnedCoins,           // Jeete hue coins
-            streak_count: 1                       // Aapki current streak count (agar ho)
-        };
-
-        // Yahan aap apna naya offline sync function call kar sakte hain 
-        // (Jo aapne offline_sync.js me banaya hai)
-        if (typeof handleGameCompletion === 'function') {
-            handleGameCompletion(gameResult);
-        } else {
-            // Fallback: Agar offline_sync.js load nahi hai toh direct fetch chalega
-            fetch('/api/sync_offline_progress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(gameResult)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Progress updated:", data);
-                let coinsElem = document.getElementById('coinsDisplay');
-                if(coinsElem && data.coins) {
-                    coinsElem.innerText = `🪙 ${data.coins}`;
+        fetch('/api/complete_game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ coins: earnedCoins })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log("Database updated successfully! New Streak:", data.streak, "Total Coins:", data.coins);
+                if(coinsElem) {
+                    coinsElem.innerText = `🪙 ${data.coins}`; // Sync with true database coin count
                 }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-        }
+            } else {
+                console.warn("Failed to update database backend:", data);
+            }
+        })
+        .catch(error => {
+            console.error("Error communicating with backend API:", error);
+        });
 
         // Show reward modal after a short delay
         setTimeout(() => {
@@ -122,7 +90,7 @@ function testCircuit() {
 
     } else {
         bulb.className = 'bulb-off';
-        status.innerText = "❌ Missing Components! Add Battery, Switch, Bulb & Wires.";
+        i18n.set(status, 'cb_missing');
         status.style.color = '#f87171';
     }
 }

@@ -7,11 +7,11 @@ const QuestionBank = {
                 const l = Math.floor(Math.random() * 8) + 4;
                 const b = Math.floor(Math.random() * 5) + 2;
                 return {
-                    text: `A rectangular garden has length ${l} m and breadth ${b} m. Find its perimeter.`,
+                    textKey: 'gq_q_rect', textVars: { l, b },
                     shapeParams: { shape: 'rectangle', l, b },
                     correctVal: 2 * (l + b),
                     correctUnit: 'm',
-                    hint: `Perimeter = 2 × (Length + Breadth) = 2 × (${l} + ${b})`
+                    hintKey: 'gq_hint_rect', hintVars: { l, b }
                 };
             }
         },
@@ -20,11 +20,11 @@ const QuestionBank = {
             generate: () => {
                 const s = Math.floor(Math.random() * 8) + 3;
                 return {
-                    text: `Calculate the area of a square tile with a side length of ${s} cm.`,
+                    textKey: 'gq_q_square', textVars: { s },
                     shapeParams: { shape: 'square', s },
                     correctVal: s * s,
                     correctUnit: 'cm²',
-                    hint: `Area of Square = Side × Side = ${s} × ${s}`
+                    hintKey: 'gq_hint_square', hintVars: { s }
                 };
             }
         },
@@ -33,11 +33,11 @@ const QuestionBank = {
             generate: () => {
                 const r = (Math.floor(Math.random() * 5) + 1) * 7;
                 return {
-                    text: `A circular pool has a radius of ${r} m. Find its circumference. (Use π = 22/7)`,
+                    textKey: 'gq_q_circle', textVars: { r },
                     shapeParams: { shape: 'circle', r },
                     correctVal: Math.round(2 * (22/7) * r),
                     correctUnit: 'm',
-                    hint: `Circumference = 2 × (22/7) × ${r}`
+                    hintKey: 'gq_hint_circle', hintVars: { r }
                 };
             }
         },
@@ -48,11 +48,11 @@ const QuestionBank = {
                 const b = Math.floor(Math.random() * 3) + 2;
                 const h = Math.floor(Math.random() * 3) + 2;
                 return {
-                    text: `Find the volume of a cuboid box with length ${l} cm, breadth ${b} cm, and height ${h} cm.`,
+                    textKey: 'gq_q_cuboid', textVars: { l, b, h },
                     shapeParams: { shape: 'cuboid', l, b, h },
                     correctVal: l * b * h,
                     correctUnit: 'cm³',
-                    hint: `Volume = Length × Breadth × Height = ${l} × ${b} × ${h}`
+                    hintKey: 'gq_hint_cuboid', hintVars: { l, b, h }
                 };
             }
         }
@@ -126,7 +126,7 @@ const Visualizer = {
                     <text x="80" y="145" fill="#fff" text-anchor="middle">B = ${p.b}m</text>`;
                 } else if(p.shape === 'square') {
                     svg.innerHTML = `<rect x="125" y="75" width="150" height="150" fill="rgba(16,185,129,0.3)" stroke="#10b981" stroke-width="3"/>
-                    <text x="200" y="60" fill="#fff" text-anchor="middle">Side = ${p.s}cm</text>`;
+                    <text x="200" y="60" fill="#fff" text-anchor="middle">${t('gq_side')} = ${p.s}cm</text>`;
                 } else if(p.shape === 'circle') {
                     svg.innerHTML = `<circle cx="200" cy="150" r="70" fill="rgba(245,158,11,0.3)" stroke="#f59e0b" stroke-width="3"/>
                     <line x1="200" y1="150" x2="270" y2="150" stroke="#fff" stroke-dasharray="4"/>
@@ -157,6 +157,13 @@ const Game = {
         if(nextBtn) nextBtn.onclick = () => Game.nextQuestion();
         if(mapBtn) mapBtn.onclick = () => Game.showScreen('zoneMapScreen');
         if(finishBtn) finishBtn.onclick = () => Game.showScreen('zoneMapScreen');
+
+        // Re-draw the shape labels when the language is changed in the middle of a question
+        document.addEventListener('languagechange', () => {
+            const q = Game.questions[Game.currentIndex];
+            const quest = document.getElementById('questScreen');
+            if(q && quest && quest.classList.contains('active')) Visualizer.render(q.shapeParams);
+        });
     },
 
     showScreen: function(id) {
@@ -184,8 +191,7 @@ const Game = {
 
     loadQuestion: function() {
         const q = this.questions[this.currentIndex];
-        const qIdx = document.getElementById('qIndex');
-        const qTot = document.getElementById('qTotal');
+        const qProg = document.getElementById('qProgress');
         const pFill = document.getElementById('progressFill');
         const cScore = document.getElementById('currentScore');
         const qText = document.getElementById('questionText');
@@ -194,11 +200,10 @@ const Game = {
         const sBtn = document.getElementById('submitBtn');
         const uAns = document.getElementById('userAnswer');
 
-        if(qIdx) qIdx.innerText = this.currentIndex + 1;
-        if(qTot) qTot.innerText = this.questions.length;
+        if(qProg) i18n.set(qProg, 'gq_question_of', { i: this.currentIndex + 1, total: this.questions.length });
         if(pFill) pFill.style.width = `${((this.currentIndex)/this.questions.length)*100}%`;
         if(cScore) cScore.innerText = this.score;
-        if(qText) qText.innerText = q.text;
+        if(qText) i18n.set(qText, q.textKey, q.textVars);
 
         if(fb) fb.classList.add('hidden');
         if(nBtn) nBtn.classList.add('hidden');
@@ -224,14 +229,14 @@ const Game = {
         if(Math.abs(val - q.correctVal) < 0.5 && unit === q.correctUnit) {
             this.score += 100;
             fb.className = 'feedback-box correct';
-            fb.innerText = '✨ Correct Answer!';
+            i18n.set(fb, 'gq_correct');
             const sBtn = document.getElementById('submitBtn');
             const nBtn = document.getElementById('nextBtn');
             if(sBtn) sBtn.classList.add('hidden');
             if(nBtn) nBtn.classList.remove('hidden');
         } else {
             fb.className = 'feedback-box incorrect';
-            fb.innerText = '❌ Incorrect answer or unit. Try again!';
+            i18n.set(fb, 'gq_incorrect');
         }
     },
 
@@ -241,7 +246,7 @@ const Game = {
         if(!fb) return;
         fb.classList.remove('hidden');
         fb.className = 'feedback-box';
-        fb.innerText = `💡 Hint: ${q.hint}`;
+        i18n.set(fb, q.hintKey, q.hintVars);
     },
 
     nextQuestion: function() {
@@ -263,16 +268,16 @@ const Game = {
 
         // Time & Score Based Reward System
         let stars = "⭐⭐⭐";
-        let badge = "Gold Shape Master 🏆";
+        let badge = "gq_badge_gold";
         let coinsEarned = 50;
 
         if (this.secondsElapsed > 45 || this.score < 400) {
             stars = "⭐⭐";
-            badge = "Silver Area Explorer 🥈";
+            badge = "gq_badge_silver";
             coinsEarned = 30;
         } else if (this.secondsElapsed > 90) {
             stars = "⭐";
-            badge = "Bronze Geometry Starter ⭐";
+            badge = "gq_badge_bronze";
             coinsEarned = 15;
         }
 
@@ -284,8 +289,8 @@ const Game = {
 
         if(sRow) sRow.innerText = stars;
         if(rCoins) rCoins.innerText = `+${coinsEarned}`;
-        if(rBadge) rBadge.innerText = badge;
-        if(bDisp) bDisp.innerText = `🏷️ ${badge}`;
+        if(rBadge) i18n.set(rBadge, badge);
+        if(bDisp) bDisp.textContent = '🏷️ ' + t(badge);
 
         // Securely sync coins and streak with the backend database
         fetch('/api/complete_game', {
